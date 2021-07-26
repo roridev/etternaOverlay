@@ -2,26 +2,27 @@
 
 # Press Shift+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-import asyncio
-from asyncio import gather
-
-from asyncio_channel import create_channel
+import trio
 
 from streamcompanion.channeling import consume_hit, consume_miss, consume_status
 from streamcompanion.websocket import connect
 
 
 async def main():
-    miss_ch = create_channel(3)
-    hit_ch = create_channel(10)
-    status_ch = create_channel(3)
+    async with trio.open_nursery() as nursery:
+        miss_send, miss_receive = trio.open_memory_channel(3)
+        hit_send, hit_receive = trio.open_memory_channel(10)
+        status_send, status_receive = trio.open_memory_channel(3)
 
-    await gather(connect(hit_ch, miss_ch, status_ch), consume_hit(hit_ch), consume_miss(miss_ch),
-                 consume_status(status_ch))
+        nursery.start_soon(connect, hit_send, miss_send, status_send)
+
+        nursery.start_soon(consume_hit, hit_receive)
+        nursery.start_soon(consume_miss, miss_receive)
+        nursery.start_soon(consume_status, status_receive)
 
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    asyncio.run(main())
+    trio.run(main)
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
