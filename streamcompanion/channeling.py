@@ -1,4 +1,4 @@
-from asyncio_channel._channel import Channel
+from trio.abc import ReceiveChannel
 
 from scoring.InTheGroove import rate, get_acc
 from scoring.JUDGE import JUDGE_4
@@ -6,7 +6,7 @@ from scoring.JUDGE import JUDGE_4
 state = {"MA": 0, "PF": 0, "GR": 0, "GD": 0, "BA": 0, "MISS": 0}
 
 
-async def consume_hit(hit_ch: Channel):
+async def consume_hit(hit_ch: ReceiveChannel):
     global state
     async for hit in hit_ch:
         rating = rate(hit, JUDGE_4)
@@ -16,7 +16,7 @@ async def consume_hit(hit_ch: Channel):
               f'[{state["MA"]}|{state["PF"]}|{state["GR"]}|{state["GD"]}|{state["BA"]}] <{state["MISS"]}>')
 
 
-async def consume_miss(miss_ch: Channel):
+async def consume_miss(miss_ch: ReceiveChannel):
     global state
     async for miss in miss_ch:
         if miss == 0:
@@ -27,7 +27,7 @@ async def consume_miss(miss_ch: Channel):
             state["MISS"] = miss
 
 
-async def consume_status(status_ch: Channel):
+async def consume_status(status_ch: ReceiveChannel):
     global state
     async for change in status_ch:
         if change == 7:
