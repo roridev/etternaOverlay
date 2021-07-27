@@ -27,7 +27,10 @@ installation
 ---
 you can unzip or whatever, just get into the folder until you see `main.py`, it should be just one click.
 
-eitherway once you are that. open a command prompt on that folder.
+go to the `resources` folder and install the font. tkinter likelly will crash the program if you dont.  
+then go back to the main folder (the one that looks like the image below).
+
+eitherway once you are on that. open a command prompt on that folder.
 ![](https://i.imgur.com/bt1QNUK.png)  
 then run the following commands
 ```
