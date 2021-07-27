@@ -5,13 +5,13 @@ import json
 
 
 def exist_and_state_changed(json_data, key, state):
-    if key in json_data and state != json_data[key]:
+    if key in json_data and json_data[key] is not None and state != json_data[key]:
         return True
     return False
 
 
 def exist_and_state_changed_map(json_data, key, state, func):
-    if key in json_data and state != func(json_data[key]):
+    if key in json_data and json_data[key] is not None and state != func(json_data[key]):
         return True
     return False
 
