@@ -54,4 +54,7 @@ def get_acc(tally: dict[str, int]) -> float:
     :param tally: the tally
     :return: the accuracy
     """
-    return (calc_dp(tally) / max_dp(get_hit_count(tally), tally["MISS"])) * 100
+    if get_hit_count(tally) == 0:
+        return 0
+    else:
+        return (calc_dp(tally) / max_dp(get_hit_count(tally), tally["MISS"])) * 100
